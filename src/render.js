@@ -95,7 +95,7 @@ export const RelativeURL = ( URL, ID ) => {
  * @return {string}               - The static markup of the component
  */
 export const RenderReact = ( componentPath, props, source = '' ) => {
-	Log.verbose(`Rendering react component ${ Style.yellow( componentPath.replace( SETTINGS.get().folder.code, '' ) ) }`);
+	Log.verbose(`Rendering react component ${ Style.yellow( componentPath.replace( SETTINGS.get().folder.component, '' ) ) }`);
 
 	let registerObj = {};
 	try {
@@ -136,7 +136,7 @@ export const RenderReact = ( componentPath, props, source = '' ) => {
 		];
 
 		// optional we redirect import statements for react to our local node_module folder
-		// so react doesn’t have to be installed separately on globally installed cuttlebelle
+		// so react doesn’t have to be installed separately on globally installed 
 		if( SETTINGS.get().site.redirectReact ) {
 			registerObj.plugins = [ ...registerObj.plugins, ...redirectReact ];
 		}
@@ -157,7 +157,7 @@ export const RenderReact = ( componentPath, props, source = '' ) => {
 		return ReactDOMServer.renderToStaticMarkup( React.createElement( component, props ) );
 	}
 	catch( error ) {
-		Log.error(`The react component ${ Style.yellow( componentPath.replace( SETTINGS.get().folder.code, '' ) ) } had trouble rendering:`);
+		Log.error(`The react component ${ Style.yellow( componentPath.replace( SETTINGS.get().folder.component, '' ) ) } had trouble rendering:`);
 		Log.error( error );
 		Log.verbose( JSON.stringify( registerObj ) );
 
@@ -265,13 +265,13 @@ export const RenderFile = ( content, file, parent = '', rendered = [], iterator 
 
 				// and off we go into the react render machine
 				let pageHTML = RenderReact(
-					Path.normalize(`${ SETTINGS.get().folder.code }/${ parsedBody.frontmatter.layout }`),
+					Path.normalize(`${ SETTINGS.get().folder.component }/${ parsedBody.frontmatter.layout }`),
 					{
 						_pages: Pages.get(),
-						_parseMD: ( markdown, file, props = defaultProps ) => <cuttlebellesillywrapper key={`${ ID }-${ iterator }-md`} dangerouslySetInnerHTML={ {
+						_parseMD: ( markdown, file, props = defaultProps ) => <sillywrapper key={`${ ID }-${ iterator }-md`} dangerouslySetInnerHTML={ {
 							__html: ParseMD( markdown, file, props )
 						} } />,
-						_body: <cuttlebellesillywrapper key={`${ ID }-${ iterator }`} dangerouslySetInnerHTML={ { __html: parsedBody.body } } />,
+						_body: <sillywrapper key={`${ ID }-${ iterator }`} dangerouslySetInnerHTML={ { __html: parsedBody.body } } />,
 						...defaultProps,
 						...parsedBody.frontmatter
 					}
@@ -391,13 +391,13 @@ export const RenderPartial = ( partial, file, parent, path, rendered, iterator =
 					.catch( reason => reject( reason ) )
 				)
 				.then( HTML => {
-					const ID = `cuttlebelleID${ Slug( partial ) }-${ iterator }`; // We generate a unique ID for react
+					const ID = `ID${ Slug( partial ) }-${ iterator }`; // We generate a unique ID for react
 
 					Log.verbose(`Rendering partial ${ Style.yellow( partial ) } complete with ID ${ Style.yellow( ID ) }`);
 
 					resolve({                                                     // to resolve we need to keep track of the path of where this partial was mentioned
 						path: path,
-						partial: <cuttlebellesillywrapper key={ ID } dangerouslySetInnerHTML={ { __html: HTML } } />,
+						partial: <sillywrapper key={ ID } dangerouslySetInnerHTML={ { __html: HTML } } />,
 					});
 			});
 		}

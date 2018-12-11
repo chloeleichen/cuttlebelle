@@ -10,8 +10,6 @@
  **************************************************************************************************************************************************************/
 
 'use strict';
-
-
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 // Dependencies
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -36,7 +34,6 @@ export type Settings = {
 		code: string,
 		assets: string,
 		site: string,
-		docs: string,
 		index: string,
 		homepage: string
 	},
@@ -50,17 +47,9 @@ export type Settings = {
 		redirectReact: boolean,
 		markdownRenderer: string,
 		watchTimeout: number
-	},
-	docs: {
-		root: string,
-		index: string,
-		category: string,
-		selfProp: string,
-		IDProp: string
 	}
 }
 */
-
 
 /**
  * Keeping our settings across multiple imports
@@ -76,11 +65,11 @@ export const SETTINGS = {
 	defaults: {
 		folder: {
 			cwd: Path.normalize(`${ process.cwd() }/`),
-			content: Path.normalize(`${ process.cwd() }/content/`),
-			code: Path.normalize(`${ process.cwd() }/code/`),
-			assets: Path.normalize(`${ process.cwd() }/assets/`),
-			site: Path.normalize(`${ process.cwd() }/site/`),
-			docs: Path.normalize(`${ process.cwd() }/docs/`),
+		
+			content: Path.normalize(`${ process.cwd() }/pages/content/`),
+			component: Path.normalize(`${ __dirname }/../component/`),
+			assets: Path.normalize(`${ process.cwd() }/pages/assets/`),
+			site: Path.normalize(`${ process.cwd() }/pages/site/`),
 			index: 'index',
 			homepage: 'index',
 		},
@@ -92,47 +81,9 @@ export const SETTINGS = {
 			root: Path.normalize(`/`),
 			doctype: '<!DOCTYPE html>', // https://github.com/facebook/react/issues/1035
 			redirectReact: true,
-			markdownRenderer: '',
+			markdownRenderer:'',
 			watchTimeout: 400,
-		},
-		docs: {
-			root: Path.normalize(`files/`),
-			index: Path.normalize(`${ __dirname }/../.template/docs/layout/index.js`),
-			category: Path.normalize(`${ __dirname }/../.template/docs/layout/category.js`),
-			IDProp: 'page2',
-			selfProp: 'body.md',
-			navProp: {
-				index: {
-					page1: 'page1',
-					page2: {
-						'page2/nested': 'page2/nested',
-					},
-					page3: 'page3',
-				},
-			},
-			pagesProp: {
-				page1: {
-					'_url': '/page1',
-					title: 'Page 1',
-				},
-				page2: {
-					'_url': '/page2',
-					title: 'Page 2',
-				},
-				'page2/nested': {
-					'_url': '/page2/nested',
-					title: 'Nested in page 2',
-				},
-				page3: {
-					'_url': '/page3',
-					title: 'Page 3',
-				},
-				index: {
-					'_url': '/',
-					title: 'Homepage',
-				},
-			},
-		},
+		}
 	},
 
 
@@ -167,9 +118,6 @@ export const SETTINGS = {
 			if( !localSettings.site ) {
 				localSettings.site = {};
 			}
-			if( !localSettings.docs ) {
-				localSettings.docs = {};
-			}
 
 			delete localSettings.folder.cwd; // ignore the cwd key
 
@@ -177,24 +125,14 @@ export const SETTINGS = {
 			if( localSettings.folder.content && !Path.isAbsolute( localSettings.folder.content ) ) {
 				localSettings.folder.content = Path.normalize(`${ process.cwd() }/${ localSettings.folder.content }/`);
 			}
-			if( localSettings.folder.code && !Path.isAbsolute( localSettings.folder.code ) ) {
-				localSettings.folder.code = Path.normalize(`${ process.cwd() }/${ localSettings.folder.code }/`);
+			if( localSettings.folder.component && !Path.isAbsolute( localSettings.folder.component ) ) {
+				localSettings.folder.component = Path.normalize(`${ process.cwd() }/${ localSettings.folder.component }/`);
 			}
 			if( localSettings.folder.site && !Path.isAbsolute( localSettings.folder.site ) ) {
 				localSettings.folder.site = Path.normalize(`${ process.cwd() }/${ localSettings.folder.site }/`);
 			}
-			if( localSettings.folder.docs && !Path.isAbsolute( localSettings.folder.docs ) ) {
-				localSettings.folder.docs = Path.normalize(`${ process.cwd() }/${ localSettings.folder.docs }/`);
-			}
 			if( localSettings.folder.assets && !Path.isAbsolute( localSettings.folder.assets ) ) {
 				localSettings.folder.assets = Path.normalize(`${ process.cwd() }/${ localSettings.folder.assets }/`);
-			}
-
-			if( localSettings.docs.index && !Path.isAbsolute( localSettings.docs.index ) ) {
-				localSettings.docs.index = Path.normalize(`${ process.cwd() }/${ localSettings.docs.index }`);
-			}
-			if( localSettings.docs.category && !Path.isAbsolute( localSettings.docs.category ) ) {
-				localSettings.docs.category = Path.normalize(`${ process.cwd() }/${ localSettings.docs.category }`);
 			}
 
 			const newSettings = {};
@@ -202,7 +140,6 @@ export const SETTINGS = {
 			newSettings.folder = Object.assign( SETTINGS.defaults.folder, localSettings.folder );
 			newSettings.layouts = Object.assign( SETTINGS.defaults.layouts, localSettings.layouts );
 			newSettings.site = Object.assign( SETTINGS.defaults.site, localSettings.site );
-			newSettings.docs = Object.assign( SETTINGS.defaults.docs, localSettings.docs );
 
 			SETTINGS.defaults = newSettings;
 
